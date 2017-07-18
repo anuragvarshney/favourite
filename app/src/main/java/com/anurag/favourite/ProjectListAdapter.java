@@ -7,9 +7,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,9 +38,9 @@ class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.Project
     private Context mContext;
     private OnItemClickListener mListener;
     private boolean isFavourite = false;
-    Drawable projectDrawable;
-    Drawable internDrawable;
-    Drawable offerDrawable;
+    private Drawable projectDrawable;
+    private Drawable internDrawable;
+    private Drawable offerDrawable;
 
     ProjectListAdapter(ArrayList<Project> projectList, Context context, OnItemClickListener listener, boolean isFavourite) {
         mProjectList = projectList;
@@ -46,15 +48,14 @@ class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.Project
         mListener = listener;
         this.isFavourite = isFavourite;
         projectDrawable = ContextCompat.getDrawable(mContext, R.drawable.ic_project);
-        internDrawable = ContextCompat.getDrawable(mContext,R.drawable.ic_internship);
-        offerDrawable = ContextCompat.getDrawable(mContext,R.drawable.ic_offer);
+        internDrawable = ContextCompat.getDrawable(mContext, R.drawable.ic_internship);
+        offerDrawable = ContextCompat.getDrawable(mContext, R.drawable.ic_offer);
     }
 
     void setList(ArrayList<Project> projects) {
         mProjectList = projects;
         notifyDataSetChanged();
     }
-
 
     @Override
     public ProjectViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -65,47 +66,47 @@ class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.Project
     @Override
     public void onBindViewHolder(final ProjectViewHolder holder, int position) {
         Project project = mProjectList.get(position);
-        holder.txtTitle.setText(project.getTitle());
-        holder.txtDescription.setText(project.getDesc());
-        holder.txtViewCount.setText(getApproxValue(project.getViewcount()));
-        if (project.isFavourite()) {
-            holder.chkFavourite.setChecked(true);
+        if (project != null) {
+            holder.txtTitle.setText(project.getTitle());
+            holder.txtDescription.setText(project.getDesc());
+            holder.txtViewCount.setText(getApproxValue(project.getViewcount()));
+            if (project.isFavourite()) {
+                holder.chkFavourite.setChecked(true);
 
-        } else {
-            holder.chkFavourite.setChecked(false);
-        }
-
-        if (project.getType().equalsIgnoreCase("project")){
-            holder.txtTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,projectDrawable,null);
-        }
-        else if (project.getType().equalsIgnoreCase("internship")){
-            holder.txtTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,internDrawable,null);
-        }
-        else if (project.getType().equalsIgnoreCase("offer")){
-            holder.txtTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,offerDrawable,null);
-        }
-
-
-
-        Glide.with(mContext)
-                .load(project.getImageUrl())
-                .asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.imgProjectIcon) {
-            @Override
-            protected void setResource(Bitmap resource) {
-                RoundedBitmapDrawable circularBitmapDrawable =
-                        RoundedBitmapDrawableFactory.create(mContext.getResources(), resource);
-                circularBitmapDrawable.setCircular(true);
-                holder.imgProjectIcon.setImageDrawable(circularBitmapDrawable);
+            } else {
+                holder.chkFavourite.setChecked(false);
             }
-        });
+
+            if (project.getType().equalsIgnoreCase("project")) {
+                holder.txtTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, projectDrawable, null);
+            } else if (project.getType().equalsIgnoreCase("internship")) {
+                holder.txtTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, internDrawable, null);
+            } else if (project.getType().equalsIgnoreCase("offer")) {
+                holder.txtTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, offerDrawable, null);
+            }
+
+            if (!TextUtils.isEmpty(project.getImageUrl()) && URLUtil.isValidUrl(project.getImageUrl())) {
+                Glide.with(mContext)
+                        .load(project.getImageUrl())
+                        .asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.imgProjectIcon) {
+                    @Override
+                    protected void setResource(Bitmap resource) {
+                        RoundedBitmapDrawable circularBitmapDrawable =
+                                RoundedBitmapDrawableFactory.create(mContext.getResources(), resource);
+                        circularBitmapDrawable.setCircular(true);
+                        holder.imgProjectIcon.setImageDrawable(circularBitmapDrawable);
+                    }
+                });
+            }
+        }
     }
 
     private String getApproxValue(double count) {
         if (count < 1000) return "" + count;
         int exp = (int) (Math.log(count) / Math.log(1000));
-        return String.format(Locale.getDefault(),"%.1f %c",
+        return String.format(Locale.getDefault(), "%.1f %c",
                 count / Math.pow(1000, exp),
-                "kMGTPE".charAt(exp-1));
+                "kMGTPE".charAt(exp - 1));
     }
 
     @Override

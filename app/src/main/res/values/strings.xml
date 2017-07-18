@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Favourite</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nothing_to_show">Nothing To Show</string>
+    <string name="progress_message">Loading Please wait</string>
+    <string name="network_error">Something went wrong</string>
+</resources>

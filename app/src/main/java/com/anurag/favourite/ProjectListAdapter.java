@@ -52,11 +52,6 @@ class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.Project
         offerDrawable = ContextCompat.getDrawable(mContext, R.drawable.ic_offer);
     }
 
-    void setList(ArrayList<Project> projects) {
-        mProjectList = projects;
-        notifyDataSetChanged();
-    }
-
     @Override
     public ProjectViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);

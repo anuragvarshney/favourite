@@ -26,19 +26,18 @@ public class ListFragment extends Fragment {
 
     private ProjectListAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
+    private ArrayList<Project> mProjectList;
 
     public ListFragment() {
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        OnItemClickListener mClickListener = (OnItemClickListener) getActivity();
-        mLinearLayoutManager = new LinearLayoutManager(getActivity());
         boolean isfavourite = getArguments().getBoolean(MainActivity.IS_FAVOURITE);
-        mAdapter = new ProjectListAdapter(new ArrayList<Project>(), getActivity(),mClickListener,isfavourite);
-
+        mProjectList = new ArrayList<>();
+        mLinearLayoutManager = new LinearLayoutManager(getActivity());
+        mAdapter = new ProjectListAdapter(mProjectList, getActivity(), (OnItemClickListener) getActivity(), isfavourite);
     }
 
     @Override
@@ -46,25 +45,24 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         ButterKnife.bind(this, view);
+        vwProjectList.setLayoutManager(mLinearLayoutManager);
+        vwProjectList.setAdapter(mAdapter);
         return view;
     }
 
     public void setList(ArrayList<Project> projectList) {
-        if (projectList!=null && projectList.size()>0) {
+        if (projectList != null && projectList.size() > 0) {
             vwProjectList.setVisibility(View.VISIBLE);
             vwError.setVisibility(View.GONE);
-            if (vwProjectList != null && mAdapter != null) {
-                vwProjectList.setLayoutManager(mLinearLayoutManager);
-                vwProjectList.setAdapter(mAdapter);
-                mAdapter.setList(projectList);
-            }
-        }
-        else {
-         setError();
+            mProjectList.clear();
+            mProjectList.addAll(projectList);
+            mAdapter.notifyDataSetChanged();
+        } else {
+            setError();
         }
     }
 
-    public void setError(){
+    public void setError() {
         vwProjectList.setVisibility(View.GONE);
         vwError.setVisibility(View.VISIBLE);
     }

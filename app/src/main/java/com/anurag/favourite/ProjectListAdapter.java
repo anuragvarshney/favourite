@@ -1,17 +1,12 @@
 package com.anurag.favourite;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,7 +14,7 @@ import android.widget.TextView;
 import com.anurag.favourite.model.Project;
 import com.anurag.favourite.utils.OnItemClickListener;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -80,19 +75,13 @@ class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.Project
                 holder.txtTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, offerDrawable, null);
             }
 
-            if (!TextUtils.isEmpty(project.getImageUrl()) && URLUtil.isValidUrl(project.getImageUrl())) {
-                Glide.with(mContext)
-                        .load(project.getImageUrl())
-                        .asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.imgProjectIcon) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(mContext.getResources(), resource);
-                        circularBitmapDrawable.setCircular(true);
-                        holder.imgProjectIcon.setImageDrawable(circularBitmapDrawable);
-                    }
-                });
-            }
+            Glide.with(mContext)
+                    .load(project.getImageUrl())
+                    .apply(RequestOptions
+                            .circleCropTransform()
+                            .placeholder(R.drawable.ic_profile)
+                            .error(R.drawable.ic_profile))
+                    .into(holder.imgProjectIcon);
         }
     }
 

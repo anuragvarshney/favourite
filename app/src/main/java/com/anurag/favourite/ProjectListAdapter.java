@@ -37,10 +37,10 @@ class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.Project
     private Drawable internDrawable;
     private Drawable offerDrawable;
 
-    ProjectListAdapter(ArrayList<Project> projectList, Context context, OnItemClickListener listener, boolean isFavourite) {
+    ProjectListAdapter(ArrayList<Project> projectList,Context context, boolean isFavourite) {
         mProjectList = projectList;
         mContext = context;
-        mListener = listener;
+        mListener = (OnItemClickListener) context;
         this.isFavourite = isFavourite;
         projectDrawable = ContextCompat.getDrawable(mContext, R.drawable.ic_project);
         internDrawable = ContextCompat.getDrawable(mContext, R.drawable.ic_internship);
@@ -66,7 +66,6 @@ class ProjectListAdapter extends RecyclerView.Adapter<ProjectListAdapter.Project
             } else {
                 holder.chkFavourite.setChecked(false);
             }
-
             if (project.getType().equalsIgnoreCase("project")) {
                 holder.txtTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, projectDrawable, null);
             } else if (project.getType().equalsIgnoreCase("internship")) {

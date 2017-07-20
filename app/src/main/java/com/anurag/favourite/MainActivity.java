@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     private ProgressDialog mProgressDialog;
     private ArrayList<Project> mProjectList;
-    private ListFragment mPojectListFragment;
+    private ListFragment mProjectListFragment;
     private ArrayList<Project> mFavouriteList;
     private ListFragment mFavouriteListFragment;
     private ProjectNetworkService mNetworkService;
@@ -55,10 +55,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     }
 
     private void initilizations() {
-        mPojectListFragment = new ListFragment();
+        mProjectListFragment = new ListFragment();
         Bundle projectBunble = new Bundle();
         projectBunble.putBoolean(IS_FAVOURITE, true);
-        mPojectListFragment.setArguments(projectBunble);
+        mProjectListFragment.setArguments(projectBunble);
         mFavouriteListFragment = new ListFragment();
         Bundle favouriteBundle = new Bundle();
         favouriteBundle.putBoolean(IS_FAVOURITE, false);
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     private void setUpViewPager() {
         ViewPagerAdapter mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        mPagerAdapter.addFragment(mPojectListFragment, "List");
+        mPagerAdapter.addFragment(mProjectListFragment, "List");
         mPagerAdapter.addFragment(mFavouriteListFragment, "Favourite");
         mViewPager.setAdapter(mPagerAdapter);
         tabLayout.setupWithViewPager(mViewPager);
@@ -88,13 +88,13 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                         mProgressDialog.cancel();
                         mProjectList = projects;
                         mFavouriteList = new ArrayList<>();
-                        mPojectListFragment.setList(mProjectList);
+                        mProjectListFragment.setList(mProjectList);
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         mProgressDialog.cancel();
-                        mPojectListFragment.setError();
+                        mProjectListFragment.setError();
                         Snackbar snackbar = Snackbar.make(vwRootLayout, R.string.network_error, Snackbar.LENGTH_INDEFINITE);
                         snackbar.setActionTextColor(Color.RED);
                         snackbar.setAction("Try Again", new View.OnClickListener() {

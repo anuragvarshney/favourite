@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.anurag.favourite.model.Project;
-import com.anurag.favourite.utils.OnItemClickListener;
 
 import java.util.ArrayList;
 
@@ -37,7 +36,7 @@ public class ListFragment extends Fragment {
         boolean isfavourite = getArguments().getBoolean(MainActivity.IS_FAVOURITE);
         mProjectList = new ArrayList<>();
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
-        mAdapter = new ProjectListAdapter(mProjectList, getActivity(), (OnItemClickListener) getActivity(), isfavourite);
+        mAdapter = new ProjectListAdapter(mProjectList,getActivity(),isfavourite);
     }
 
     @Override
